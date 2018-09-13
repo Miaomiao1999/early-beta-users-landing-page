@@ -1,0 +1,47 @@
+
+Waals.m
+function f = Waals(v, P, T, alpha, beta, R)
+  % Input:  v = volume of gas (in cubic meters)
+  % P = pressure of gas (in Pascals)
+  % T = temperature of gas (in Kelvin)
+  % alpha = gas constant associated with intermolecular forces
+  % beta = gas constant associated with volume occupied by molecules
+  %  R =  universal gas constant (in J/(kg*K))
+  %
+  %  Output: f = value of the function f(v)
+  f = (P + alpha./(v.^2)).* (v - beta) - R.* T;
+end
+
+WaalsFun.m
+R = 188.93;
+P = 1013250;
+T = 300;
+alpha = 188.33;
+beta = 9.77 * 10^(-4);
+v = linspace(0.001,0.1);
+plot(v,Waals(v, P, T, alpha, beta, R))
+grid on
+hold on
+p = [P 0 -alpha 2*alpha*beta];
+roots(p)
+
+fun = @(v0) Waals(v0, P, T, alpha, beta, R);
+% fzero(fun, v0) tries to find a point v where fun(v) = 0
+v1 = fzero(fun, 0.001)
+v2 = fzero(fun, 0.0075)
+v3 = fzero(fun, 0.1)
+[v, f, eflag, output] = fzero(fun, 0.001);
+N_1 = output.iterations
+[v, f, eflag, output] = fzero(fun, 0.0075);
+N_2 = output.iterations
+
+
+ [v, f, eflag, output] = fzero(fun, 0.1);
+N_3 = output.iterations
+v0 = [0.001, 0.0075, 0.1];
+vstate = R*T/P
+plot(v0, Waals(v0, P, T, alpha, beta, R), ’ro’)
+plot(vstate, Waals(vstate, P, T, alpha, beta, R), ’bo’)
+plot(v1, Waals(v1, P, T, alpha, beta, R), ’mo’)
+legend(’f (v)’, ’initial guesses’, ’state equation’, ’van der Waals model’)
+hold off
