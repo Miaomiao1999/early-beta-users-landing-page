@@ -1,0 +1,136 @@
+% The type command lists the contents of a file, and the drawnow command forces the plot to draw before the code is completed (this is needed to get all but the last plot to appear in the published document).
+        
+        type Tridiagonal_Matrix
+        type ThomasAlg_Solve
+        type test1
+        type test2
+test1 test2
+        function T= Tridiagonal_Matrix(n)
+        A = diag(rand(1,n));
+        C = diag(rand(1,n-1), 1);
+        E = diag(rand(1, n-1), -1);
+T = A + C + E;
+        function x = ThomasAlg_Solve(T,b)
+        % Factorize tridiagnoal matrix T into bidiagnoal matrices L and U. L
+         is a
+        % lower triangular matrix and solve the system Ly = b. U is a upper
+        % triangular matrix and solve the system  Ux = y.
+        % [L,U] = Bidiagonal_Matrix(T)
+        n= length(T);
+        L = zeros(n,n);
+        U = zeros(n,n);
+        % ci = gamma i for upper-diagonal matrix
+        for i = 1: n-1
+            U(i, i+1) = T(i, i+1);
+        end
+        % diagonal entries are all ones for lower-diagonal matrix
+        for j = 1: n
+            L(j, j) = 1;
+        end
+        U(1,1) = T(1,1);
+        % define alpha and beta using the recursive relations in (2)
+   1
+   for k = 2:n
+    L(k,k-1) = T(k, k-1)/ U(k-1,k-1);
+    U(k,k) = T(k, k) - L(k, k-1) * U(k-1, k);
+end
+% y= Lowertrig(L, b) starts
+if any(diag(L) == 0)
+    error('Input matrix is singular')
+end
+y = zeros(n,1);
+ y(1,1)=b(1,1);
+ for i = 2:n
+     y(i)= b(i)- L(i,i-1) * y(i-1);
+ end
+ % forward substitution ends
+ % x = Uppertrig(U, y) starts
+if any(diag(U) == 0)
+    error('Input matrix is singular')
+end
+x = zeros(n,1);
+x(n) = y(n) / U(n,n);
+for j = n-1 : -1 :1
+    x(j) = (y(j) - U(j, j+1)* x(j+1))/ U(j,j);
+end
+% backward substitution ends
+%Exercise3 Implement in a Matlab function the algorithm settled in
+ the
+% previous Exercise to solve a generic tridiagonal linear system Tx =
+ b.
+n = 5;
+b= rand(5,1);
+T=Tridiagonal_Matrix(n);
+xThomasAlg = ThomasAlg_Solve(T,b)
+xSTDAlg= T\b
+%Exercise 3 Compare the numerical performances (in terms of CPU time)
+ of
+% the standard LU factoriza- tion with the bidiagonal version in
+% Exercise 2, running the two functions on sufficiently large linear
+% systems T x = b, with T a random tridiagonal matrix of order n
+ (select,
+% for instance, n = 100,200,...,1000).
+n = 100: 100: 1000;
+nRuns = 10;
+   2
+
+     time_STDAlg = zeros(length(n),nRuns);
+  time_ThomasAlg = zeros(length(n),nRuns);
+   for i = 1:length(n)
+       T = Tridiagonal_Matrix(n(i));
+       b = rand(n(i),1);
+       for j = 1:nRuns
+           tic, [L,U,P] =lu(T); xSTD = U\(L\(P*b));
+           time_STDAlg(i,j) = toc;
+           tic, ThomasAlg_Solve(T,b);
+           time_ThomasAlg(i,j) = toc;
+end end
+ fprintf('--------------------------------------------------------\n')
+ fprintf('% 4s % 12s %12s\n', 'N', 'time_STDAlg','time_ThomasAlg')
+ fprintf('--------------------------------------------------------\n')
+  for i= 1:length(n)
+      fprintf('% 4d % 12e %15e\n', n(1,i), time_STDAlg(i,j),
+ time_ThomasAlg(i,j))
+  end
+  figure, clf
+  axes('XScale', 'log', 'FontSize', 18)
+  hold on
+  semilogx(n, mean(time_STDAlg, 2), 'b-o', 'LineWidth', 2)
+  semilogx(n, mean(time_ThomasAlg, 2), 'r-o', 'LineWidth', 2)
+  legend('time for standard algorithm','time for bidiagonal version',
+ 'Location', 'NW')
+  xlabel('n')
+  ylabel('time in seconds')
+  drawnow
+hold off
+xThomasAlg =
+   -0.4212
+    1.2949
+    0.0010
+   -1.3928
+    1.6876
+xSTDAlg =
+   -0.4212
+    1.2949
+    0.0010
+   -1.3928
+    1.6876
+--------------------------------------------------------
+   N  time_STDAlg time_ThomasAlg
+   3
+
+   --------------------------------------------------------
+ 100  1.294240e-04    2.697500e-05
+ 200  4.555150e-04    6.309900e-05
+ 300  1.116896e-03    2.544350e-04
+ 400  2.944641e-03    9.503910e-04
+ 500  5.271891e-03    1.641715e-03
+ 600  7.540170e-03    2.188351e-03
+ 700  1.770571e-02    2.942834e-03
+ 800  1.689894e-02    3.849616e-03
+ 900  2.238059e-02    4.583572e-03
+ 1000  2.910129e-02    6.044999e-03
+ 
+ 
+ Published with MATLAB® R2017b
+   4
