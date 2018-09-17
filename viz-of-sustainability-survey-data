@@ -1,0 +1,302 @@
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(readr)
+data2015_coded <- read.csv("~/Desktop/MATH 362W/data2015_coded.csv")
+data2016_coded <- read.csv("~/Desktop/MATH 362W/data2016_coded.csv")
+data2017_coded <- read.csv("~/Desktop/MATH 362W/data2017_ coded.csv")
+library(dplyr)
+library(ggplot2)
+library(plotly)
+library(gridExtra)
+data2015_coded1 <- na.omit(data2015_coded)
+data2016_coded1 <- na.omit(data2016_coded)
+data2017_coded1 <- na.omit(data2017_coded)
+
+data2016_coded1
+```
+
+# which is the most common sustainability behaviors?
+```{r}
+
+# a table showing the sum of each column from Q1.a-Q1.g
+# what about for different three years?
+# can I get a barplot to show the trend?
+
+
+dataQ1_2015 <- data_frame()
+for(i in 1:7){
+  j = i+5
+  #dataQ1[i,0] <- names(data2015_coded1[,j])
+  dataQ1_2015[1,i] <- sum(data2015_coded1[,j])/length(data2015_coded1[,i]) 
+}
+
+as.matrix(dataQ1_2015)
+```
+
+```{r}
+dataQ1_2016 <- data_frame()
+
+  for(i in 1:8){
+  j = i+9
+
+  dataQ1_2016[1,i] <- sum(data2016_coded1[,j])/length(data2016_coded1[,i]) 
+} 
+
+as.matrix(dataQ1_2016)
+
+```
+
+
+```{r}
+dataQ1_2017 <- data_frame()
+
+  for(i in 1:8){
+  j = i+10
+
+  dataQ1_2017[1,i] <- sum(data2017_coded1[,j])/length(data2017_coded1[,i]) 
+}
+
+as.matrix(dataQ1_2017)
+
+```
+
+
+
+
+```{r}
+
+# compare professional school students (Theology, Law, Business) with the Health related students (Nursing, Public Health, Medicine) and contrast those with Laney Grad School students
+
+
+```
+
+
+
+```{r}
+## Behaviors vs. Attitudes/Values for 2017
+
+food_choices2015 <- data2015_coded1$Q1.e
+nature_connection2015.Ave <- rowSums(data2016_coded1[,20:22])/3
+teamwork_value2016.Ave <- rowSums(data2016_coded1[, c(15,16,38)])/3
+
+
+Q1Ave_2015 <-rowSums(data2017_coded1[,11:18])/8
+Q2Ave_2017 <-rowSums(data2017_coded1[,21:26])/6
+
+
+data2017_coded1 %>%
+
+ggplot(aes(x = Q1Ave_2017, y = Q2Ave_2017)) + 
+  geom_point(aes(col=factor(Q1.e), size= Q1.e))+
+  geom_smooth(method="lm")
+
+```
+
+
+
+```{r}
+# 2015 data
+
+ggplot(data2015_coded1, aes(x = Q4.1.d, fill=factor(Q1.e)),color=factor(Q1.e))  + geom_bar()
+```
+As we see in the graph, most of the scores range in the middle betweeen 3 and 5, and no clear pattern shows knowledge leads to more commoon food behaviors.
+
+
+```{r}
+# 2016 data
+ggplot(data2016_coded1, aes(x = Q3.i, fill=factor(Q1.e)),color=factor(Q1.e))  + geom_bar()
+
+```
+
+As Q3.i knowledge of food sustainability issues increases, the behavior of making dietary choices for sustainability reasons becomes more and more common.
+
+```{r}
+#2017 data
+ggplot(data2017_coded1, aes(x = Q3.i, fill=factor(Q1.e)),color=factor(Q1.e))  + geom_bar()
+
+```
+
+
+
+```{r}
+#2016 data
+Q1Ave_2016 <-rowSums(data2016_coded1[,10:17])/8
+Q2Ave_2016 <-rowSums(data2016_coded1[,20:25])/6
+Q3Ave_2016 <-rowSums(data2016_coded1[,26:40])/15
+
+plot_ly(data2016_coded1, x=~factor(Career), y=~Q1.e, type="box", name = 'behaviors') %>%
+  add_trace(y= ~Q2Ave_2016, name = 'attitudes') %>%
+  add_trace(y = ~Q3.i, name = 'knowledge') %>%
+
+   layout(title = "2016: Food-related Behaviors, Attitudes and Knowledge")
+
+
+```
+
+
+
+
+
+```{r}
+Q1Ave_2015 <-rowSums(data2015_coded1[,6:12])/7
+Q2Ave_2015 <-rowSums(data2015_coded1[,13:21])/9
+Q3Ave_2015 <-rowSums(data2015_coded1[,30:33])/4
+
+
+plot_ly(data2015_coded1, x=~factor(Career), y=~Q1.e, type="box", name = 'behaviors') %>%
+add_trace(y = ~Q3.d,name = 'Emorys commitment') %>%
+add_trace(y = ~Q4.1.d, name = 'knowledge') %>%
+  layout(title = "2015: Food-related Behaviors, Emory's commmitment, and Knowledge")
+
+
+```
+
+
+
+
+```{r}
+data2016_coded1 %>%
+group_by(Career) %>%
+  ggplot(aes(x = Career, y = Q1.e)) + 
+   geom_jitter(alpha=0.4, color="tomato", aes(size= Q1.e))+
+  geom_boxplot(alpha =0.7) 
+
+
+data2015_coded1 %>%
+  group_by(Career) %>%
+  ggplot(aes(x = Career, y = Q1.e)) + 
+   geom_jitter(alpha=0.3, color="springgreen4", aes(size= Q1.e))+
+  geom_boxplot(alpha =0.7) 
+
+data2017_coded1 %>%
+  group_by(Career) %>%
+   ggplot(aes(x = Career, y = Q1.e)) + 
+   geom_jitter(alpha=0.7, color="deeppink2", aes(size= Q1.e))+
+  geom_boxplot(alpha =0.7) 
+```
+
+
+```{r}
+food_choices2016 <- data2016_coded1$Q1.e
+nature_connection2016.Ave <- rowSums(data2016_coded1[,20:22])/3
+teamwork_value2016.Ave <- rowSums(data2016_coded1[, c(15,16,38)])/3
+
+## Declare varaibles of interest.
+
+cor2016_1 <- cor(food_choices2016, nature_connection2016.Ave, use = "complete.obs")
+cor2016_2 <- cor(food_choices2016, teamwork_value2016.Ave, use = "complete.obs")
+
+## Notice: cor2016_1 = .51, cor2016_2 = .39
+
+nature_connection2016.Ave <- round(nature_connection2016.Ave, digits = 1)
+teamwork_value2016.Ave <- round(teamwork_value2016.Ave, digits = 1)
+
+## We eliminate non-terminating decimals, and make the boxplots easier to read by rounding.
+
+data2016_snipped = cbind.data.frame(food_choices2016,nature_connection2016.Ave, teamwork_value2016.Ave)
+
+## We aggregate our vector variables in this snipped dataframe.
+
+## The same data transformation procedures performed for hte 2016 data are performed for the 2017 data below.
+
+data2017_coded1$Q3.m <- (7/5)*data2017_coded1$Q3.m
+
+food_choices2017 <- data2017_coded1$Q1.e
+nature_connection2017.Ave <-rowSums(data2017_coded1[,22:24])/3
+teamwork_value2017.Ave <- rowSums(data2017_coded1[, c(16,17,39)])/3
+topical_knowledge2017.Ave <- rowSums(data2017_coded1[, c(27:34,37,38)])/10
+
+cor2017_1 <- cor(food_choices2017, nature_connection2017.Ave, use = "complete.obs")
+cor2017_2 <- cor(food_choices2017, teamwork_value2017.Ave, use = "complete.obs")
+
+## Notice: cor2017_1 = .42, cor2017_2 = .43
+
+food_choices2017 <- round(food_choices2017, digits = 1)
+nature_connection2017.Ave <- round(nature_connection2017.Ave, digits = 1)
+teamwork_value2017.Ave <- round(teamwork_value2017.Ave, digits = 1)
+
+data2017_snipped = cbind.data.frame(food_choices2017,nature_connection2017.Ave, teamwork_value2017.Ave)
+
+## We prepare our vector varaibles to be graphed using ggplot2.
+
+library(ggplot2)
+library(wesanderson)
+
+data2016_snipped$food_choices2016 <- as.factor(data2016_snipped$food_choices2016)
+y.data2016_snipped <- data2016_snipped
+y.data2016_snipped$Year <- "2016"
+y.data2017_snipped <- data2017_snipped
+y.data2017_snipped$Year <- "2017"
+
+library(data.table)
+
+nms <- c("food", "nature", "teamwork", "Year")
+setnames(y.data2016_snipped, nms)
+setnames(y.data2017_snipped, nms)
+data_snipped <- rbind(y.data2016_snipped, y.data2017_snipped)
+
+library(wesanderson)
+library(tidyverse)
+
+give.n <- function(food_choices2017){
+    return(y = mean(food_choices2017), label = length(food_choices2017))
+} %>%
+p1 <- ggplot(data_snipped, aes(food, nature)) + geom_boxplot(aes(fill = Year)) +
+      labs(y="Connection to nature", x="Tendency to choose sustainable food") +
+  stat_summary(fun.data = given.n, geom = "text",
+                 position = position_dodge(width = 0.75))+
+      scale_fill_manual(values=wes_palette(n=2, name="Chevalier"))
+##    ggtitle("Connection to nature by sustainable food choices") 
+p1
+
+  
+# 
+    layout(title = "Box Plot of mpg by cyl")
+
+p2 <- ggplot(data_snipped, aes(food, teamwork)) + geom_boxplot(aes(fill = Year)) +
+      labs(y="Tendency to collaborate on sustainability issues", x="Tendency to choose sustainable food") +
+      scale_fill_manual(values=wes_palette(n=2, name="Chevalier"))
+##    ggtitle("Collaborative preferences by sustainable food choices") 
+p2
+
+## We see similar trends in both boxplots!
+
+
+```
+
+
+```{r}
+new<-factor(data2016_coded1, levels=c("Professional","LAC"))
+new[data2016_coded1$Career=="LAW" |data2016_coded1$Career =="MED"]<-"Professional"
+new
+
+```
+
+
+```{r}
+
+
+data1<- data2017_coded1 %>%
+  group_by(Career) %>%
+ 
+  
+data2<- data2016_coded1 %>%
+  group_by(Career) %>%
+
+data3<- data2015_coded1%>%
+  group_by(Career) %>%
+
+data4<-merge(data1,data2, by="Year") %>%
+
+data5<-merge(data3, data4, by="Year")
+
+
+plot_ly(data5, x = ~factor(Career), y = ~Q1.e, type = 'scatter', mode="markers", name = 'data2017', col=Career) %>%
+add_trace(y = ~Q1.e, name = 'data2016') %>%
+add_trace(y= ~Q1.e, name='data2017') %>%
+  layout(yaxis = list(title = 'Behaviors of Undergrads and Grads'))
+
+```
