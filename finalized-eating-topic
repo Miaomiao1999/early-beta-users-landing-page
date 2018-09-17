@@ -1,0 +1,153 @@
+data2016_coded1 <- data2016_coded[!is.na(data2016_coded$Q1.e) & !is.na(data2016_coded$Q2.b) & !is.na(data2016_coded$Q2.c) &
+                                    !is.na(data2016_coded$Q2.d) & !is.na(data2016_coded$Q1.f) & !is.na(data2016_coded$Q1.g) &
+                                    !is.na(data2016_coded$Q3.a) & !is.na(data2016_coded$Q3.b) & !is.na(data2016_coded$Q3.c) &
+                                    !is.na(data2016_coded$Q3.d) & !is.na(data2016_coded$Q3.e) & !is.na(data2016_coded$Q3.f) &
+                                    !is.na(data2016_coded$Q3.g) & !is.na(data2016_coded$Q3.h) & !is.na(data2016_coded$Q3.i) &
+                                    !is.na(data2016_coded$Q3.j) & !is.na(data2016_coded$Q3.k) & !is.na(data2016_coded$Q3.l) &
+                                    !is.na(data2016_coded$Q3.m),]
+
+data2017_coded1 <- data2017_coded[!is.na(data2017_coded$Q1.e) & !is.na(data2017_coded$Q2.b) & !is.na(data2017_coded$Q2.c) &
+                                    !is.na(data2017_coded$Q2.d) & !is.na(data2017_coded$Q1.f) & !is.na(data2017_coded$Q1.g) &
+                                    !is.na(data2017_coded$Q3.a) & !is.na(data2017_coded$Q3.b) & !is.na(data2017_coded$Q3.c) &
+                                    !is.na(data2017_coded$Q3.d) & !is.na(data2017_coded$Q3.e) & !is.na(data2017_coded$Q3.f) &
+                                    !is.na(data2017_coded$Q3.g) & !is.na(data2017_coded$Q3.h) & !is.na(data2017_coded$Q3.i) &
+                                    !is.na(data2017_coded$Q3.j) & !is.na(data2017_coded$Q3.k) & !is.na(data2017_coded$Q3.l) &
+                                    !is.na(data2017_coded$Q3.m),]
+
+## Removed rows with N/A data in variables of interest.
+
+data2016_coded1$Q3.a <- (7/5)*data2016_coded1$Q3.a
+data2016_coded1$Q3.b <- (7/5)*data2016_coded1$Q3.b
+data2016_coded1$Q3.c <- (7/5)*data2016_coded1$Q3.c
+data2016_coded1$Q3.d <- (7/5)*data2016_coded1$Q3.d
+data2016_coded1$Q3.e <- (7/5)*data2016_coded1$Q3.e
+data2016_coded1$Q3.f <- (7/5)*data2016_coded1$Q3.f
+data2016_coded1$Q3.g <- (7/5)*data2016_coded1$Q3.g
+data2016_coded1$Q3.h <- (7/5)*data2016_coded1$Q3.h
+data2016_coded1$Q3.i <- (7/5)*data2016_coded1$Q3.i
+data2016_coded1$Q3.j <- (7/5)*data2016_coded1$Q3.j
+data2016_coded1$Q3.k <- (7/5)*data2016_coded1$Q3.k
+data2016_coded1$Q3.l <- (7/5)*data2016_coded1$Q3.l
+data2016_coded1$Q3.m <- (7/5)*data2016_coded1$Q3.m
+
+## All of our other variables of interest are rated 1-7, so we scale this variable from 1-5 to
+## be in the same 1-7 range as other variables.
+
+food_choices2016 <- data2016_coded1$Q1.e
+nature_connection2016.Ave <- rowSums(data2016_coded1[,20:22])/3
+teamwork_value2016.Ave <- rowSums(data2016_coded1[, c(15,16,38)])/3
+topical_knowledge2016.Ave <- rowSums(data2016_coded1[,26:37])/12
+
+## Declare varaibles of interest.
+
+cor2016_1 <- cor(food_choices2016, nature_connection2016.Ave, use = "complete.obs")
+cor2016_2 <- cor(food_choices2016, teamwork_value2016.Ave, use = "complete.obs")
+cor2016_3 <- cor(food_choices2016, topical_knowledge2016.Ave, use = "complete.obs")
+
+nature_connection2016.Ave <- round(nature_connection2016.Ave, digits = 1)
+teamwork_value2016.Ave <- round(teamwork_value2016.Ave, digits = 1)
+topical_knowledge2016.Ave <- round(topical_knowledge2016.Ave, digits = 1)
+
+## We eliminate non-terminating decimals, and make the boxplots easier to read by rounding.
+
+data2016_snipped = cbind.data.frame(food_choices2016,nature_connection2016.Ave, teamwork_value2016.Ave, topical_knowledge2016.Ave)
+
+## We aggregate our vector variables in this snipped dataframe.
+
+## The same data transformation procedures performed for hte 2016 data are performed for the 2017 data below.
+
+data2017_coded1$Q3.a <- (7/5)*data2017_coded1$Q3.a
+data2017_coded1$Q3.b <- (7/5)*data2017_coded1$Q3.b
+data2017_coded1$Q3.c <- (7/5)*data2017_coded1$Q3.c
+data2017_coded1$Q3.d <- (7/5)*data2017_coded1$Q3.d
+data2017_coded1$Q3.e <- (7/5)*data2017_coded1$Q3.e
+data2017_coded1$Q3.f <- (7/5)*data2017_coded1$Q3.f
+data2017_coded1$Q3.g <- (7/5)*data2017_coded1$Q3.g
+data2017_coded1$Q3.h <- (7/5)*data2017_coded1$Q3.h
+data2017_coded1$Q3.i <- (7/5)*data2017_coded1$Q3.i
+data2017_coded1$Q3.j <- (7/5)*data2017_coded1$Q3.j
+data2017_coded1$Q3.k <- (7/5)*data2017_coded1$Q3.k
+data2017_coded1$Q3.l <- (7/5)*data2017_coded1$Q3.l
+data2017_coded1$Q3.m <- (7/5)*data2017_coded1$Q3.m
+
+food_choices2017 <- data2017_coded1$Q1.e
+nature_connection2017.Ave <-rowSums(data2017_coded1[,22:24])/3
+teamwork_value2017.Ave <- rowSums(data2017_coded1[, c(16,17,39)])/3
+topical_knowledge2017.Ave <- rowSums(data2017_coded1[, c(27:38)])/12
+
+cor2017_1 <- cor(food_choices2017, nature_connection2017.Ave, use = "complete.obs")
+cor2017_2 <- cor(food_choices2017, teamwork_value2017.Ave, use = "complete.obs")
+cor2017_3 <- cor(food_choices2017, topical_knowledge2017.Ave, use = "complete.obs")
+
+nature_connection2017.Ave <- round(nature_connection2017.Ave, digits = 1)
+teamwork_value2017.Ave <- round(teamwork_value2017.Ave, digits = 1)
+topical_knowledge2017.Ave <- round(topical_knowledge2017.Ave, digits = 1)
+
+data2017_snipped = cbind.data.frame(food_choices2017,nature_connection2017.Ave, teamwork_value2017.Ave, topical_knowledge2017.Ave)
+
+## We prepare our vector varaibles to be graphed using ggplot2.
+
+library(ggplot2)
+
+data2016_snipped$food_choices2016 <- as.factor(data2016_snipped$food_choices2016)
+y.data2016_snipped <- data2016_snipped
+y.data2016_snipped$Year <- "2016"
+y.data2017_snipped <- data2017_snipped
+y.data2017_snipped$Year <- "2017"
+
+library(data.table)
+
+nms <- c("food", "nature", "teamwork", "knowledge", "Year")
+setnames(y.data2016_snipped, nms)
+setnames(y.data2017_snipped, nms)
+data_snipped <- rbind(y.data2016_snipped, y.data2017_snipped)
+
+## We see similar trends in both boxplots!
+
+lm_1_1 <- lm(food_choices2016 ~ nature_connection2016.Ave)
+summary(lm_1_1)
+lm_1_2 <- lm(food_choices2017 ~ nature_connection2017.Ave)
+summary(lm_1_2)
+
+lm_2_1 <- lm(food_choices2016 ~ teamwork_value2016.Ave)
+summary(lm_2_1)
+lm_2_2 <- lm(food_choices2017 ~ teamwork_value2017.Ave)
+summary(lm_2_2)
+
+lm_3_1 <- lm(food_choices2016 ~ topical_knowledge2016.Ave)
+summary(lm_3_1)
+lm_3_2 <- lm(food_choices2017 ~ topical_knowledge2017.Ave)
+summary(lm_3_2)
+
+library(wesanderson)
+
+p1 <- ggplot(data_snipped, aes(food, nature)) + geom_boxplot(aes(fill = Year)) +
+## here we add two regression lines to visualize the relationship between food and nature
+  
+  geom_smooth(method="lm", se=TRUE, aes(group =Year, col = Year))+
+  labs(y="Connection to nature", x="Tendency to choose sustainable food") +
+  scale_fill_manual(values=wes_palette(n=2, name="Chevalier"))
+##    ggtitle("Connection to nature by sustainable food choices") 
+p1
+
+p2 <- ggplot(data_snipped, aes(food, teamwork)) + geom_boxplot(aes(fill = Year)) +
+  labs(y="Tendency to collaborate on sustainability issues", x="Tendency to choose sustainable food") +
+  ## here we add two regression lines to visualize the relationship between food and teamwork
+  
+  geom_smooth(method="lm", se=TRUE, aes(group =Year, col = Year))+
+  scale_fill_manual(values=wes_palette(n=2, name="Chevalier"))
+##    ggtitle("Collaborative preferences by sustainable food choices") 
+p2
+
+p3 <- ggplot(data_snipped, aes(food, knowledge)) + geom_boxplot(aes(fill = Year)) +
+  ## here we add two regression lines to visualize the relationship between food and knowledge
+  
+  geom_smooth(method="lm", se=TRUE, aes(group =Year, col = Year))+
+  labs(y="Knowledge of sustainability issues", x="Tendency to choose sustainable food") +
+  scale_fill_manual(values=wes_palette(n=2, name="Chevalier"))
+##    ggtitle("Knowledge of sustainability issues by sustainable food choices") 
+p3
+
+
+
+
